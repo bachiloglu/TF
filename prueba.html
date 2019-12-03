@@ -11,6 +11,10 @@
             background-color: black;
         }
     </style>
+    <link 
+    href="https://github.com/bachiloglu/TF/blob/master/MERCURIO-MIENTE.otf" 
+    rel="preload" as="font" crossorigin
+    >
 </head>
 
 <body>
@@ -34,7 +38,6 @@
 
     function preload() {
         lines = loadStrings("https://raw.githubusercontent.com/bachiloglu/TF/master/discurso_01.txt");
-        thefont = loadFont('mercurio.otf')
     }
 
     function setup() {
@@ -103,7 +106,6 @@
             let dy = (my - height / 2) * this.frequency * depth;
             let x = this.position.x + dx;
             let y = this.position.y + dy;
-            textFont(thefont);
             textSize(ts);
             fill(fl);
             noStroke();
