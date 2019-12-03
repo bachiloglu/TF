@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="vis"></div>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+
+<script>
+    let lines;
+    let words;
+    let maxFreq = 0;
+    let depth = 40;
+    let px = 0;
+    let py = 0;
+
+    let inp;
+
+    function preload() {
+        lines = loadStrings("https://raw.githubusercontent.com/bachiloglu/TF/master/discurso_01.txt");
+        thefont = loadFont('mercurio.otf')
+    }
+
+    function setup() {
+        createCanvas(windowWidth-30, windowHeight-30).parent("vis");
+        init(join(lines, " ").toLowerCase());
+    }
+
+    function init(text) {
+        let tokens = text.toLowerCase().split(/[ \-,.;:!?()]/);
+        let dict = {};
+        let count = 0;
+        for (let w of tokens) {
+            if (w.length != 0) {
+                if (dict[w] == undefined) {
+                    dict[w] = 0;
+                }
+                dict[w]++;
+                count++;
+            }
+        }
+        console.log(dict);
+        words = [];
+        for (let w in dict) {
+            let val = dict[w];
+            let freq = val / count;
+            words.push(new Word(w, freq));
+            maxFreq = max(maxFreq, freq);
+        }
+        words.sort((a, b) => a.frequency - b.frequency < 0 ? -1 : 1);
+        console.log(words);
+    }
+
+    function keyPressed() {
+        if (key == ' ') {
+            for (let w of words) {
+                w.position = createVector(random(width), random(height));
+            }
+        }
+    }
+
+    function draw() {
+        background(0);
+        let newX = mouseX;
+        let newY = mouseY;
+        let dx = lerp(px, newX, 0.1);
+        let dy = lerp(py, newY, 0.1);
+        for (let w of words) {
+            w.show(maxFreq, dx, dy);
+        }
+        px = dx;
+        py = dy;
+    }
+
+    class Word {
+
+        constructor(val, freq) {
+            this.value = val;
+            this.position = createVector(random(width), random(height));
+            this.frequency = freq;
+        }
+
+        show(maxFreq, mx, my) {
+            let ts = map(this.frequency, 0, maxFreq, 0, height / 5);
+            let fl = map(this.frequency, 0, maxFreq, 50, 255);
+            let dx = (mx - width / 2) * this.frequency * depth;
+            let dy = (my - height / 2) * this.frequency * depth;
+            let x = this.position.x + dx;
+            let y = this.position.y + dy;
+            textFont(thefont);
+            textSize(ts);
+            fill(fl);
+            noStroke();
+            text(this.value, x, y);
+        }
+
+    }
+</script>
+
+</html>
