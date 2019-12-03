@@ -23,7 +23,7 @@
         
         @font-face {
             font-family: "mercurio";
-            src: url("mercurio.otf");
+            src: url("C:/Users/bachiloglu/Desktop/mercurio.otf");
         }
 
         body {
@@ -47,7 +47,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col" id="ventana">
                 <div id="vis"></div>
             </div>
             <div class="col-8 mt-5">
@@ -74,9 +74,10 @@
     let py = 0;
 
     let inp;
-
-    var wx = window.innerWidth;
-    var hx = window.innerHeight;
+    
+    var ventana = document.getElementById("ventana");
+    var wx = ventana.offsetWidth;
+    var hx = ventana.offsetHeight;
 
     function preload() {
         lines = loadStrings("https://raw.githubusercontent.com/bachiloglu/TF/gh-pages/discurso_01.txt");
@@ -85,7 +86,7 @@
     }
 
     function setup() {
-        createCanvas(1000, 600).parent("vis");
+        createCanvas(wx*3, hx*2).parent("vis");
         init(join(lines, " ").toLowerCase());
     }
 
